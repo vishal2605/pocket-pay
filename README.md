@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Turborepo starter
 
 This is an official starter Turborepo.
@@ -79,3 +80,7 @@ Learn more about the power of Turborepo:
 - [Filtering](https://turbo.build/repo/docs/core-concepts/monorepos/filtering)
 - [Configuration Options](https://turbo.build/repo/docs/reference/configuration)
 - [CLI Usage](https://turbo.build/repo/docs/reference/command-line-reference)
+=======
+# pocket-pay
+paytm like application
+>>>>>>> 07c234482ddb740f2016eaded7844be133a35eb0
