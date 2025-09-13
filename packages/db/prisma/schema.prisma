@@ -8,21 +8,79 @@ datasource db {
 }
 
 model User {
-  id          Int      @id @default(autoincrement())
-  email       String?  @unique
-  name        String? 
-  number      String  @unique
-  password    String
+  id                Int                 @id @default(autoincrement())
+  email             String              @unique // Changed from String?
+  firstname         String              // Changed from String?
+  lastname          String              // Changed from String?
+  password          String
+  OnRampTransaction OnRampTransaction[]
+  Balance           Balance[]
+  sentTransactions     WalletTransaction[] @relation("SentTransactions")
+  receivedTransactions WalletTransaction[] @relation("ReceivedTransactions")
+}
+model Merchant {
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
+  name      String?
+  auth_type AuthType
 }
 
-model Merchant {
-  id          Int     @id @default(autoincrement())
-  email       String  @unique
-  name        String?
-  auth_type   AuthType   
+model OnRampTransaction {
+  id        Int          @id @default(autoincrement())
+  status    OnRampStatus
+  token     String       @unique
+  provider  String
+  amount    Int
+  startTime DateTime
+  userId    Int
+  user      User         @relation(fields: [userId], references: [id])
+}
+
+model WalletTransaction {
+  id          Int             @id @default(autoincrement())
+  type        TransactionType
+  amount      Decimal
+  fromUserId  Int?
+  toUserId    Int?
+  
+  fromUser    User?           @relation("SentTransactions", fields: [fromUserId], references: [id])
+  toUser      User?           @relation("ReceivedTransactions", fields: [toUserId], references: [id])
+
+  status      TransactionStatus
+  timestamp   DateTime        @default(now())
+  notes       String?
+}
+
+
+enum TransactionType {
+  TRANSFER
+  PAY_MERCHANT
+  REFUND
+  WITHDRAW
+}
+
+enum TransactionStatus {
+  SUCCESS
+  REVERSED
+  FAILED
+}
+
+
+model Balance {
+  id     Int  @id @default(autoincrement())
+  userId Int  @unique
+  amount Int
+  locked Int
+  user   User @relation(fields: [userId], references: [id])
 }
 
 enum AuthType {
   Google
   Github
+}
+
+enum OnRampStatus {
+  Success
+  Failure
+  Processing
 }
